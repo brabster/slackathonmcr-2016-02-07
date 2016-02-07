@@ -1,30 +1,33 @@
 'use strict';
 
+var buildStatusBlock = function(res) {
+  return {
+    color: res.statusCode < 400 && 'good' || res.statusCode < 500 && 'warning' || 'danger',
+    text: res.statusCode + (res.statusMessage && ' (' + res.statusMessage + ')' || '')
+  }
+};
+
+var buildHeadersBlock = function(res) {
+  return {
+    title: 'Response Headers',
+    fields: Object.keys(res.headers).map(function(k) {
+      return {
+        title: k,
+        value: res.headers[k],
+        short: true
+      }
+    })
+  }
+};
+
+
 module.exports = function(url, res) {
   return {
     title: 'HTTP code',
-    text: 'HTTP for: <' + url + '|' + url + '>',
+    text: 'Pinged <' + url + '|' + url + '>',
     attachments: [
-      {
-        color: 'good',
-        fields: [
-          {
-            title: 'HTTP status code',
-            value: res.statusCode + '',
-            short: false
-          }
-        ]
-      },
-      {
-        color: 'danger',
-        fields: [
-          {
-            title: 'TTFB',
-            value: '200',
-            short: false
-          }
-        ]
-      }
+      buildStatusBlock(res),
+      buildHeadersBlock(res)
     ]
   }
 };
