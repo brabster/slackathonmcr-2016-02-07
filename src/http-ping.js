@@ -10,8 +10,11 @@ module.exports = function(text, cb) {
   try {
     var normalizedUrl = normalizeUrl(text),
       httpLib = /^https:/.test(normalizedUrl) && https || http;
+
     return httpLib['get'](normalizeUrl(text), function(res) {
       return cb(undefined, buildSlackResponse(text, res));
+    }).on('error', function(e) {
+      return cb(e);
     });
   } catch (e) {
     return cb(e);

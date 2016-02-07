@@ -23,6 +23,7 @@ var buildHeadersBlock = function(res) {
 
 module.exports = function(url, res) {
   return {
+    response_type: 'in_channel',
     title: 'HTTP code',
     text: 'Pinged <' + url + '|' + url + '>',
     attachments: [
